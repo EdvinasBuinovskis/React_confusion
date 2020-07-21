@@ -1,25 +1,24 @@
 import React, { Component } from 'react';
-import { Card, CardImg, CardText, CardBody, CardTitle, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText} from 'reactstrap';
+import { Card, CardImg, CardText, CardBody, CardTitle} from 'reactstrap';
 
 class DishDetail extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-        }
     }
 
     renderDish(dish) {
         if (dish != null) {
             return(
-                <Card>
-                    <CardImg width="100%" src={dish.image} alt={dish.name}/>
-                    <CardBody>
-                        <CardTitle>{dish.name}</CardTitle>
-                        <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
+                <div className="col-12 col-md-5 m-1">
+                    <Card>
+                        <CardImg width="100%" src={dish.image} alt={dish.name}/>
+                        <CardBody>
+                            <CardTitle>{dish.name}</CardTitle>
+                            <CardText>{dish.description}</CardText>
+                        </CardBody>
+                    </Card>
+                </div>
             );
         }
         else {
@@ -29,22 +28,20 @@ class DishDetail extends Component {
         }
     }
 
-    renderComments(dish) {
-        if (dish != null && dish.comments !=null) {
-            const usercomments = dish.comments.map((usercomment) =>
+    renderComments(comments) {
+        if (comments !=null) {
+            const usercomments = comments.map((usercomment) =>
                 <div key ={usercomment.id}>
-                    <ListGroupItem>
-                        <ListGroupItemHeading>{usercomment.comment}</ListGroupItemHeading>
-                    </ListGroupItem>
-                    <ListGroupItem>  
-                        <ListGroupItemText>&#45;&#45; {usercomment.author} &#44; {usercomment.date}</ListGroupItemText>
-                    </ListGroupItem>  
+                    <li>
+                        <p>{usercomment.comment}</p>
+                        <p>-- {usercomment.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day:'2-digit'}).format(new Date(Date.parse(usercomment.date)))}</p>
+                    </li>
                 </div>
                 );
                 return (
-                    <div>
+                    <div className="col-12 col-md-5 m-1">
                         <h4>Comments</h4>
-                        <ListGroup>{usercomments}</ListGroup>
+                        <ul className="list-unstyled">{usercomments}</ul>
                     </div>
                 );
         }
@@ -56,27 +53,19 @@ class DishDetail extends Component {
     }
 
     render() {
-    //     if (this.props.dish != null && this.props.dish.comments !=null) {
-    //     const usercomments = this.props.dish.comments.map((usercomment) => {
-    //         return (
-    //             <div key={comment.id} className="col-12 col-md-5 m-1">
-    //                 <p>{comment.comment}</p>
-    //                 <p>{comment.author}</p>
-    //                 <p>{comment.date}</p>
-    //             </div>
-    //         );
-    //     });
-    // }
-        return ( 
-            <div className="row">
-                <div  className="col-12 col-md-5 m-1">
+        if (this.props.dish != null){
+            return (
+                <div className="row">
                     {this.renderDish(this.props.dish)}
+                    {this.renderComments(this.props.dish.comments)}
                 </div>
-                <div  className="col-12 col-md-5 m-1">
-                    {this.renderComments(this.props.dish)}
-                </div>
-            </div>
-        );
+            );
+        }
+        else {
+            return(
+                <div></div>
+            );
+        }
     }
 }
 
